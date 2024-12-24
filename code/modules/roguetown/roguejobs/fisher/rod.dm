@@ -255,23 +255,38 @@
 	var/turf/targeted
 	if(istype(target, /turf/open/transparent/openspace))
 		var/turf/downcheck = get_step_multiz(target, DOWN)
-		if(istype(downcheck, /turf/open/water))
+		if(istype(downcheck, /turf/open/water) || downcheck.liquids?.liquid_state >= LIQUID_STATE_ANKLES)
 			targeted = downcheck
 		else
 			to_chat(user, "<span class='warning'>I can't fish here...</span>")
 			return
 	else if(istype(target, /turf/open/water))
 		targeted = target
+	else if(isturf(target))
+		var/turf/T = target
+		if(T.liquids?.liquid_state >= LIQUID_STATE_ANKLES)
+			targeted = T
 	else
 		to_chat(user, "<span class='warning'>I can't fish here...</span>")
 		return
 	
 	var/localwater = 0
 	for(var/turf/open/W in block(get_step(targeted, SOUTHWEST), get_step(targeted, NORTHEAST)))
-		if(istype(W, /turf/open/water))
+		if(istype(W, /turf/open/water) || W.liquids?.liquid_state >= LIQUID_STATE_ANKLES)
 			localwater++
 	if(localwater < 5)
 		to_chat(user, "<span class='warning'>I can't fish here...</span>")
+		return
+	
+	/*
+	if(targeted.liquids && (is_type_in_list(/datum/reagent/water/gross, targeted.liquids.reagent_list)))
+		to_chat(user, "<span class='warning'>I can't fish here...</span>")
+
+		return
+	*/
+	if(istype(targeted, /turf/open/floor/rogue/lowered/bath) || istype(targeted, /turf/open/floor/rogue/lowered/sewer))
+		to_chat(user, "<span class='warning'>I can't fish here...</span>")
+
 		return
 
 	if(istype(targeted, /turf/open/water/bath) || istype(targeted, /turf/open/water/sewer))
@@ -325,17 +340,17 @@
 
 	var/list/fishpicker = list()
 	var/list/deepfishlist = list(/obj/item/reagent_containers/food/snacks/fish/angler = 1)
-	if(istype(targeted, /turf/open/water/swamp))
+	if(istype(targeted, /turf/open/water/swamp) || istype(targeted, /turf/open/floor/rogue/lowered/swamp))
 		fishpicker = list(/obj/item/reagent_containers/food/snacks/fish/eel = 6, 
 							/obj/item/reagent_containers/food/snacks/fish/carp = 2)
-	else if(istype(targeted, /turf/open/water/swamp/deep))
+	else if(istype(targeted, /turf/open/water/swamp/deep) || istype(targeted, /turf/open/floor/rogue/lowered/swamp/deep))
 		fishpicker = list(/obj/item/reagent_containers/food/snacks/fish/eel = 5, 
 							/obj/item/reagent_containers/food/snacks/fish/carp = 3)
 		deepmod += 1
-	else if(istype(targeted, /turf/open/water/cleanshallow))
+	else if(istype(targeted, /turf/open/water/cleanshallow) || istype(targeted, /turf/open/floor/rogue/lowered/cleanshallow))
 		fishpicker = list(/obj/item/reagent_containers/food/snacks/fish/eel = 3, 
 							/obj/item/reagent_containers/food/snacks/fish/carp = 5)
-	else if(istype(targeted, /turf/open/water/river))
+	else if(istype(targeted, /turf/open/water/river) || istype(targeted, /turf/open/floor/rogue/lowered/river))
 		fishpicker = list(/obj/item/reagent_containers/food/snacks/fish/eel = 2, 
 							/obj/item/reagent_containers/food/snacks/fish/carp = 6)
 		deepmod += 1

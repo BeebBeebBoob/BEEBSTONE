@@ -254,3 +254,35 @@
 		return TRUE
 	else
 		return FALSE
+
+/datum/keybinding/living/emerge
+	hotkey_keys = list("ShiftV")
+	name = "emerge"
+	full_name = "Emerge"
+	description = "Emerge from water to the surface."
+	var/lastrest = 0
+
+/datum/keybinding/living/emerge/down(client/user)
+	var/mob/living/L = user.mob
+	if(!lastrest || world.time > lastrest + 15)
+		L.emerge()
+		lastrest = world.time
+		return TRUE
+	else
+		return FALSE
+
+/datum/keybinding/living/dive
+	hotkey_keys = list("CtrlV")
+	name = "dive"
+	full_name = "Dive"
+	description = "Dive into the water."
+	var/lastrest = 0
+
+/datum/keybinding/living/dive/down(client/user)
+	var/mob/living/L = user.mob
+	if(!lastrest || world.time > lastrest + 15)
+		L.dive()
+		lastrest = world.time
+		return TRUE
+	else
+		return FALSE

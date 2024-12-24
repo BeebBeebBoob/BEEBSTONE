@@ -155,7 +155,7 @@
 		playsound(user, "clothwipe", 100, TRUE)
 
 /obj/item/natural/cloth/attack_turf(turf/T, mob/living/user)
-	if(istype(T, /turf/open/water))
+	if(istype(T, /turf/open/water) || T.liquids?.liquid_state >= LIQUID_STATE_ANKLES)
 		return ..()
 	if(prob(30 + (wet*10)))
 		user.visible_message(span_notice("[user] wipes \the [T.name] with [src]."), span_notice("I wipe \the [T.name] with [src]."))

@@ -175,6 +175,7 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	/client/proc/test_movable_UI,
 	/client/proc/test_snap_UI,
 	/client/proc/debugNatureMapGenerator,
+	/client/proc/toggle_liquid_debug,
 	/client/proc/check_bomb_impacts,
 	/proc/machine_upgrade,
 	/client/proc/populate_world,

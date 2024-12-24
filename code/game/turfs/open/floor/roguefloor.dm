@@ -272,7 +272,7 @@
 	water_level = max(water_level-10,0)
 	for(var/D in GLOB.cardinals)
 		var/turf/TU = get_step(src, D)
-		if(istype(TU, /turf/open/water))
+		if(istype(TU, /turf/open/water) || TU.liquids?.liquid_state >= LIQUID_STATE_ANKLES)
 			if(!muddy)
 				become_muddy()
 			return TRUE //stop processing

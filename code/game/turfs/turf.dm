@@ -277,6 +277,9 @@
 		return FALSE
 	if(!force && (!can_zFall(A, levels, target) || !A.can_zFall(src, levels, target, DOWN)))
 		return FALSE
+	if(!force && liquids)
+		if(liquids.liquid_fall(A, levels, target)) // Читайте liquid_effect.dm#15
+			return FALSE
 	A.zfalling = TRUE
 	A.forceMove(target)
 	A.zfalling = FALSE

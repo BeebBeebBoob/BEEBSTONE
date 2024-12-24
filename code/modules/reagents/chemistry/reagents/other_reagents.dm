@@ -165,6 +165,9 @@
 		M.add_nausea(50)
 	return ..()
 
+/datum/reagent/water/gross/muddy
+	color = "#705a4377"
+
 /*
  *	Water reaction to turf
  */

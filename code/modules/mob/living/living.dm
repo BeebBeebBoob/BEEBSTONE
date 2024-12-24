@@ -1994,3 +1994,42 @@
 	reset_perspective()
 	update_cone_show()
 //	UnregisterSignal(src, COMSIG_MOVABLE_PRE_MOVE)
+
+/mob/living/proc/emerge()
+	var/turf/our_turf = get_turf(src)
+	var/turf/upper = SSmapping.get_turf_above(our_turf)
+	if(!our_turf.liquids)
+		to_chat(src, span_notice("There's no water to emerge from"))
+		return
+	if(our_turf.liquids.liquid_state < LIQUID_STATE_SHOULDERS)
+		to_chat(src, span_notice("There's not enough water to emerge from"))
+		return
+	if(!canZMove(UP, upper))
+		to_chat(src, span_notice("There's something blocks the way."))
+		return
+	if(!upper.liquids)
+		to_chat(src, span_notice("I can't reach, there's not enough water to emerge from"))
+		return
+
+	visible_message(span_info("[src] emerges from water."))
+
+	if(!do_after(src, 2 SECONDS, target = src))
+		return
+	
+	changeNext_move(CLICK_CD_MELEE)
+	forceMove(upper)
+
+/mob/living/proc/dive()
+	var/turf/our_turf = get_turf(src)
+	var/turf/below = SSmapping.get_turf_below(our_turf)
+
+	if(!canZMove(DOWN, below)) // ьез жидкости мы бы должны были бы упасть
+		return
+		
+	visible_message(span_info("[src] dives into water."))
+
+	if(!do_after(src, 0.5 SECONDS, target = src))
+		return
+	
+	changeNext_move(CLICK_CD_MELEE)
+	forceMove(below)

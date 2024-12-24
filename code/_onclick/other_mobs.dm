@@ -228,6 +228,29 @@
 			mind.attackedme[user.real_name] = world.time
 		log_combat(user, src, "bit")
 
+
+/turf/open/onbite(mob/user)
+	if(!liquids)
+		return
+	if(isliving(user))
+		var/mob/living/L = user
+		if(L.stat != CONSCIOUS)
+			return
+		if(iscarbon(user))
+			var/mob/living/carbon/C = user
+			if(C.is_mouth_covered())
+				return
+		playsound(user, pick('sound/foley/waterwash (1).ogg','sound/foley/waterwash (2).ogg'), 100, FALSE)
+		user.visible_message(span_info("[user] starts to drink from [src]'s water.")) // water?? А что если там яблочный сок
+		if(do_after(L, 25, target = src))
+			var/datum/reagents/reagents = liquids.take_reagents_flat(2)
+			reagents.trans_to(L, reagents.total_volume, transfered_by = user, method = INGEST)
+			playsound(user,pick('sound/items/drink_gen (1).ogg','sound/items/drink_gen (2).ogg','sound/items/drink_gen (3).ogg'), 100, TRUE)
+			qdel(reagents)
+		return
+	..()
+
+
 /mob/living/MiddleClickOn(atom/A, params)
 	..()
 	if(!mmb_intent)
@@ -290,12 +313,13 @@
 				OffBalance(30)
 				return
 			if(INTENT_JUMP)
-				if(istype(src.loc, /turf/open/water))
-					to_chat(src, span_warning("I'm floating in [get_turf(src)]."))
+				var/turf/T = get_turf(src)
+				if(T.liquids?.liquid_state >= LIQUID_STATE_ANKLES)
+					to_chat(src, span_warning("I'm floating in [T]."))
 					return
 				if(!A || QDELETED(A) || !A.loc)
 					return
-				if(A == src || A == src.loc)
+				if(A == src || A == T)
 					return
 				if(src.get_num_legs() < 2)
 					return
@@ -347,8 +371,7 @@
 						throw_at(A, jrange, 1, src, spin = FALSE)
 						while(src.throwing)
 							sleep(1)
-					if(isopenturf(src.loc))
-						var/turf/open/T = src.loc
+					if(isopenturf(T))
 						if(T.landsound)
 							playsound(T, T.landsound, 100, FALSE)
 						T.Entered(src)

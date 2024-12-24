@@ -47,6 +47,7 @@ GLOBAL_LIST_INIT(name2reagent, build_name2reagent())
 	. = ..()
 	holder = null
 
+// Это по сути expose. reaction?? 
 /datum/reagent/proc/reaction_mob(mob/living/M, method=TOUCH, reac_volume, show_message = 1, touch_protection = 0)
 	if(!istype(M))
 		return 0

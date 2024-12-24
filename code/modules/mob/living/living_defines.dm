@@ -173,3 +173,6 @@
 
 	/// Default pitch for emotes, on humans this is modified by stats
 	var/voice_pitch = 1
+
+	/// When was the last time this mob was alerted to a height difference in turfs that necessitates climbing out?
+	COOLDOWN_DECLARE(last_height_alert)
