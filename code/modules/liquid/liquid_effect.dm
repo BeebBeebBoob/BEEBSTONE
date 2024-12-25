@@ -362,7 +362,7 @@
 
 /obj/effect/abstract/liquid_turf/Destroy(force)
 	if(force)
-		UnregisterSignal(my_turf, list(COMSIG_ATOM_ENTERED))
+		UnregisterSignal(my_turf, COMSIG_ATOM_ENTERED)
 		if(my_turf.lgroup)
 			my_turf.lgroup.remove_from_group(my_turf)
 		//Is added because it could invoke a change to neighboring liquids
@@ -389,7 +389,7 @@
 	if(NewT.liquids)
 		stack_trace("Liquids tried to change to a new turf, that already had liquids on it!")
 
-	UnregisterSignal(my_turf, list(COMSIG_ATOM_ENTERED))
+	UnregisterSignal(my_turf, COMSIG_ATOM_ENTERED)
 	if(SSliquids.active_turfs[my_turf])
 		SSliquids.active_turfs -= my_turf
 		SSliquids.active_turfs[NewT] = TRUE
@@ -431,4 +431,4 @@
 	SSliquids.active_immutables -= T
 	T.liquids = null
 	T.vis_contents -= src
-	UnregisterSignal(T, list(COMSIG_ATOM_ENTERED))
+	UnregisterSignal(T, COMSIG_ATOM_ENTERED)

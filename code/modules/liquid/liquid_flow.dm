@@ -10,7 +10,7 @@
 	. = ..()
 	master_turf = get_turf(src)
 	if(!(locate(/obj/effect/abstract/liquid_turf) in master_turf.contents))
-		CRASH("liquid flow creator isn't in liquid.")
+		stack_trace("liquid flow creator isn't in liquid.")
 	return INITIALIZE_HINT_LATELOAD
 
 /obj/effect/abstract/liquid_flow/LateInitialize()

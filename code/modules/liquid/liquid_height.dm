@@ -26,7 +26,7 @@
 /datum/element/liquids_height/Detach(atom/movable/target)
 	. = ..()
 
-	UnregisterSignal(target, list(COMSIG_MOVABLE_MOVED))
+	UnregisterSignal(target, COMSIG_MOVABLE_MOVED)
 	var/atom/movable/movable_target = target
 	if(isturf(movable_target.loc))
 		var/turf/turf_loc = movable_target.loc
