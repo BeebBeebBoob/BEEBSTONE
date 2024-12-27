@@ -88,16 +88,14 @@ SUBSYSTEM_DEF(liquids)
 		if(T.lgroup)
 			T.lgroup.amount_of_active_turfs--
 
-/client/proc/toggle_liquid_debug()
+/client/proc/spawn_liquid()
+	set name = "Spawn Water"
+	set desc = "Flood the turf you are standing on."
 	set category = "Debug"
-	set name = "Liquid Groups Color Debug"
-	set desc = ""
 
-	if(!check_rights(R_DEBUG))
+	if(!check_rights(R_SPAWN))
 		return
-
-	GLOB.liquid_debug_colors = !GLOB.liquid_debug_colors
-
-	message_admins(span_adminnotice("[key_name_admin(src)] [GLOB.liquid_debug_colors ? "disabled" : "enabled"] liquid groups color."))
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "Liquid Groups Color") // If...
-	log_admin("[key_name(src)] [GLOB.liquid_debug_colors ? "disabled" : "enabled"] liquid groups color.")
+	var/mob/user = usr
+	if(istype(user) && user.client)
+		for(var/turf/T in range(1, get_turf(user)))
+			T.add_liquid(/datum/reagent/water, 2000)
