@@ -163,6 +163,19 @@
 			adjustOxyLoss(5)
 	if(isopenturf(loc))
 		var/turf/open/T = loc
+		//Underwater breathing
+		if(T.liquids && BREATHE_UNDERWATER_CHECK(src, T.liquids))
+			adjustOxyLoss(5) // uh oh where'd the air go
+			if(!HAS_TRAIT(src, TRAIT_HOLDBREATH) && oxyloss <= OXYGEN_DAMAGE_CHOKING_THRESHOLD && stat == CONSCIOUS)
+				to_chat(src, span_userdanger("You hold in your breath!"))
+			else
+				//Try and drink water
+				var/datum/reagents/tempr = T.liquids.take_reagents_flat(CHOKE_REAGENTS_INGEST_ON_BREATH_AMOUNT)
+				tempr.trans_to(src, tempr.total_volume, method = INGEST)
+				qdel(tempr)
+				visible_message(span_warning("[src] chokes on water!"), \
+							span_userdanger("You're choking on water!"))
+			return FALSE
 		if(reagents&& T.pollutants)
 			var/obj/effect/pollutant_effect/P = T.pollutants
 			for(var/datum/pollutant/X in P.pollute_list)
@@ -183,7 +196,8 @@
 /mob/living/carbon/human/handle_inwater()
 	. = ..()
 	if(!(mobility_flags & MOBILITY_STAND))
-		if(istype(loc, /turf/open/water/bath))
+		var/turf/T = get_turf(loc)
+		if(istype(T, /turf/open/water/bath) || T.liquids?.liquid_state >= LIQUID_STATE_ANKLES)
 			if(!wear_armor && !wear_shirt && !wear_pants)
 				add_stress(/datum/stressevent/bathwater)
 
@@ -267,6 +281,21 @@
 				breath = loc_as_obj.handle_internal_lifeform(src, BREATH_VOLUME)
 
 			else if(isturf(loc)) //Breathe from loc as turf
+				//Underwater breathing
+				var/turf/our_turf = loc
+				if(our_turf.liquids && !HAS_TRAIT(src, TRAIT_NOBREATH) && BREATHE_UNDERWATER_CHECK(src, our_turf.liquids))
+					breath = null // uh oh where'd the air go
+					check_breath(breath)
+					if(oxyloss <= OXYGEN_DAMAGE_CHOKING_THRESHOLD && stat == CONSCIOUS)
+						to_chat(src, span_userdanger("You hold in your breath!"))
+					else
+						//Try and drink water
+						var/datum/reagents/tempr = our_turf.liquids.take_reagents_flat(CHOKE_REAGENTS_INGEST_ON_BREATH_AMOUNT)
+						tempr.trans_to(src, tempr.total_volume, method = INGEST)
+						qdel(tempr)
+						visible_message(span_warning("[src] chokes on water!"), \
+									span_userdanger("You're choking on water!"))
+					return FALSE
 				var/breath_moles = 0
 				if(environment)
 					breath_moles = environment.total_moles()*BREATH_PERCENTAGE

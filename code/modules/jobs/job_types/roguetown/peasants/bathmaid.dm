@@ -84,7 +84,7 @@
 
 /obj/item/bath/soap/attack(mob/target, mob/user)
 	var/turf/bathspot = get_turf(target)
-	if(!istype(bathspot, /turf/open/water/bath))
+	if(bathspot.liquids?.liquid_state >= LIQUID_STATE_ANKLES)
 		to_chat(user, span_warning("They must be in the bath water!"))
 		return
 	if(istype(target, /mob/living/carbon/human))

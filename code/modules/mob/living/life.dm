@@ -70,7 +70,8 @@
 
 	handle_typing_indicator()
 
-	if(istype(loc, /turf/open/water))
+	var/turf/T = get_turf(loc)
+	if(istype(T, /turf/open/water) || T.liquids?.liquid_state >= LIQUID_STATE_ANKLES)
 		handle_inwater()
 
 	if(stat != DEAD)
@@ -93,7 +94,8 @@
 	update_sneak_invis()
 	handle_fire()
 	handle_typing_indicator()
-	if(istype(loc, /turf/open/water))
+	var/turf/T = get_turf(loc)
+	if(istype(T, /turf/open/water) || T.liquids?.liquid_state >= LIQUID_STATE_ANKLES)
 		handle_inwater()
 
 /mob/living/proc/handle_breathing(times_fired)

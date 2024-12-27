@@ -31,7 +31,7 @@
 	if(isclosedturf(T))
 		return
 	if(!istype(T, /turf/open/transparent/openspace))
-		if(!istype(T, /turf/open/water))
+		if(!istype(T, /turf/open/water) || !(T.liquids?.liquid_state >= LIQUID_STATE_ANKLES))
 			return
 	return TRUE
 
@@ -115,7 +115,7 @@
 	if(isclosedturf(T))
 		return
 	if(!istype(T, /turf/open/transparent/openspace))
-		if(!istype(T, /turf/open/water))
+		if(!istype(T, /turf/open/water) || !(T.liquids?.liquid_state >= LIQUID_STATE_ANKLES))
 			return
 	return TRUE
 
@@ -215,7 +215,7 @@
 	if(isclosedturf(T))
 		return
 	if(!istype(T, /turf/open/transparent/openspace))
-		if(!istype(T, /turf/open/water))
+		if(!istype(T, /turf/open/water) || !(T.liquids?.liquid_state >= LIQUID_STATE_ANKLES))
 			return
 	return TRUE
 
@@ -252,3 +252,21 @@
 	if(!istype(T, /turf/open/floor/rogue))
 		return
 	return ..()
+
+/// LOWERED TURF
+/datum/crafting_recipe/roguetown/turfs/loweredstonefloor
+	name = "stone lowered floor"
+	result = /turf/open/floor/rogue/blocks/lowered
+	reqs = list(/obj/item/natural/stone = 1,
+		/obj/structure/closet/dirthole = 1)
+	skillcraft = /datum/skill/craft/masonry
+	verbage_simple = "build"
+	verbage = "builds"
+	craftdiff = 0
+
+/datum/crafting_recipe/roguetown/turfs/loweredstonefloor/TurfCheck(mob/user, turf/T)
+	if(isclosedturf(T))
+		return
+	if(!istype(T, /turf/open/floor/rogue))
+		return
+	return TRUE

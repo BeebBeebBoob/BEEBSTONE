@@ -1,6 +1,8 @@
+/// ЭТОТ ФАЙЛ НАДО УДАЛИТЬ. ВСЕ ТУРФЫ ЗАМЕНИТЬ НА НОВЫЕ. Сейчас авто-замена в Initialize() ПЛОХА
+
 ///////////// OVERLAY EFFECTS /////////////
 /obj/effect/overlay/water
-	icon = 'icons/turf/newwater.dmi'
+	icon = 'icons/turf/water.dmi'
 	icon_state = "bottom"
 	density = 0
 	mouse_opacity = 0
@@ -42,10 +44,13 @@
 	var/swimdir = FALSE
 
 /turf/open/water/Initialize()
+	ChangeTurf(/turf/open/floor/rogue/lowered)
+	/*
 	.  = ..()
 	water_overlay = new(src)
 	water_top_overlay = new(src)
 	update_icon()
+	*/
 
 /turf/open/water/update_icon()
 	if(water_overlay)
@@ -175,27 +180,6 @@
 		return
 	..()
 
-/turf/open/water/onbite(mob/user)
-	if(isliving(user))
-		var/mob/living/L = user
-		if(L.stat != CONSCIOUS)
-			return
-		if(iscarbon(user))
-			var/mob/living/carbon/C = user
-			if(C.is_mouth_covered())
-				return
-		playsound(user, pick('sound/foley/waterwash (1).ogg','sound/foley/waterwash (2).ogg'), 100, FALSE)
-		user.visible_message(span_info("[user] starts to drink from [src]."))
-		if(do_after(L, 25, target = src))
-			var/list/waterl = list()
-			waterl[water_reagent] = 2
-			var/datum/reagents/reagents = new()
-			reagents.add_reagent_list(waterl)
-			reagents.trans_to(L, reagents.total_volume, transfered_by = user, method = INGEST)
-			playsound(user,pick('sound/items/drink_gen (1).ogg','sound/items/drink_gen (2).ogg','sound/items/drink_gen (3).ogg'), 100, TRUE)
-		return
-	..()
-
 /turf/open/water/Destroy()
 	. = ..()
 	if(water_overlay)
@@ -230,8 +214,11 @@
 	water_reagent = /datum/reagent/water/gross
 
 /turf/open/water/bath/Initialize()
+	ChangeTurf(/turf/open/floor/rogue/lowered/bath)
+	/*
 	.  = ..()
 	icon_state = "bathtile"
+	*/
 
 /turf/open/water/sewer
 	name = "sewage"
@@ -245,9 +232,12 @@
 	water_reagent = /datum/reagent/water/gross
 
 /turf/open/water/sewer/Initialize()
+	ChangeTurf(/turf/open/floor/rogue/lowered/sewer)
+	/*
 	icon_state = "paving"
 	water_color = pick("#705a43","#697043")
 	.  = ..()
+	*/
 
 /turf/open/water/swamp
 	name = "murk"
@@ -261,10 +251,13 @@
 	water_reagent = /datum/reagent/water/gross
 
 /turf/open/water/swamp/Initialize()
+	ChangeTurf(/turf/open/floor/rogue/lowered/swamp)
+	/*
 	icon_state = "dirt"
 	dir = pick(GLOB.cardinals)
 	water_color = pick("#705a43")
 	.  = ..()
+	*/
 
 /turf/open/water/swamp/Entered(atom/movable/AM, atom/oldLoc)
 	. = ..()
@@ -294,6 +287,9 @@
 	water_color = "#705a43"
 	slowdown = 5
 	swim_skill = TRUE
+	
+/turf/open/water/swamp/deep/Initialize()
+	ChangeTurf(/turf/open/floor/rogue/lowered/swamp/deep)
 
 /turf/open/water/swamp/deep/Entered(atom/movable/AM, atom/oldLoc)
 	. = ..()
@@ -326,15 +322,17 @@
 	water_reagent = /datum/reagent/water
 
 /turf/open/water/cleanshallow/Initialize()
+	ChangeTurf(/turf/open/floor/rogue/lowered/cleanshallow)
+	/*
 	icon_state = "rock"
 	dir = pick(GLOB.cardinals)
 	.  = ..()
-
+	*/
 
 /turf/open/water/river
 	name = "river"
 	desc = "Crystal clear water! Flowing swiflty along the river."
-	icon_state = "rivermove"
+	icon_state = "rockwd"
 	icon = 'icons/turf/roguefloor.dmi'
 	water_level = 3
 	slowdown = 5
@@ -342,6 +340,13 @@
 	swim_skill = TRUE
 	var/river_processing
 	swimdir = TRUE
+	
+/turf/open/water/river/Initialize()
+	ChangeTurf(/turf/open/floor/rogue/lowered/river)
+	/*
+	icon_state = "rock"
+	.  = ..()
+	*/
 
 /turf/open/water/river/update_icon()
 	if(water_overlay)
@@ -353,9 +358,6 @@
 		water_top_overlay.icon_state = "rivertop"
 		water_top_overlay.dir = dir
 
-/turf/open/water/river/Initialize()
-	icon_state = "rock"
-	.  = ..()
 
 /turf/open/water/river/Entered(atom/movable/AM, atom/oldLoc)
 	. = ..()

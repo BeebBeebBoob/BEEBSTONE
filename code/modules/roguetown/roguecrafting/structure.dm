@@ -6,7 +6,7 @@
 /datum/crafting_recipe/roguetown/structure/TurfCheck(mob/user, turf/T)
 	if(istype(T,/turf/open/transparent/openspace))
 		return FALSE
-	if(istype(T, /turf/open/water))
+	if(istype(T, /turf/open/water) || !(T.liquids?.liquid_state >= LIQUID_STATE_ANKLES))
 		return FALSE
 	return ..()
 
@@ -506,7 +506,7 @@
 		return FALSE
 	if(istype(T,/turf/open/lava))
 		return FALSE
-	if(istype(T,/turf/open/water))
+	if(istype(T,/turf/open/water) || !(T.liquids?.liquid_state >= LIQUID_STATE_ANKLES))
 		return FALSE
 	return ..()
 

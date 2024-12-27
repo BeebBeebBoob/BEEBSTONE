@@ -87,7 +87,7 @@
 						update_icon()
 			return
 		if(heldclod)
-			if(istype(T, /turf/open/water))
+			if(istype(T, /turf/open/water) || T.liquids?.liquid_state >= LIQUID_STATE_ANKLES)
 				qdel(heldclod)
 //				T.ChangeTurf(/turf/open/floor/rogue/dirt/road, flags = CHANGETURF_INHERIT_AIR)
 			else

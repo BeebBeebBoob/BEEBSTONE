@@ -17,7 +17,6 @@ GLOBAL_LIST_INIT(turfs_without_ground, typecacheof(list(
 	/turf/open/space,
 	/turf/open/chasm,
 	/turf/open/lava,
-	/turf/open/water,
 	/turf/open/transparent/openspace
 	)))
 
